@@ -1,0 +1,17 @@
+version: '3.6'
+
+services:
+    backend:
+        container_name: backend
+        image: backend
+        restart: always
+        build: ./API/
+        ports:
+          - "64978:80"  
+
+    frontend:
+        container_name: frontend
+        image: frontend
+        build: ./Marvel-API/
+        ports:
+          - '5555:80'
