@@ -12,7 +12,10 @@ RUN dotnet publish --no-restore -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app .
+COPY --from=publish /app/publish .
+
+COPY --from=publish /app/publish .
+COPY --from=publish /app/publish .
 # Padrão de container ASP.NET
 # ENTRYPOINT ["dotnet", "CarterAPI.dll"]
 # Opção utilizada pelo Heroku
