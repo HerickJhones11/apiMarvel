@@ -1,14 +1,19 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-bionic AS build-env
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 WORKDIR /app
-EXPOSE 80
 
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore 
+RUN dotnet build --no-restore -c Release -o /app
 
-COPY . ./
-RUN dotnet restore
-RUN dotnet publish ./API/API.csproj -c Release -o ./API/out --no-restore
+FROM build AS publish
+RUN dotnet publish --no-restore -c Release -o /app
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-bionic AS runtime
+FROM base AS final
 WORKDIR /app
-COPY --from=build-env /app/API/out ./
-
-ENTRYPOINT ["dotnet", "API.dll"]
+COPY --from=publish /app .
+# Padrão de container ASP.NET
+# ENTRYPOINT ["dotnet", "CarterAPI.dll"]
+# Opção utilizada pelo Heroku
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet CarterAPI.dll

@@ -9,9 +9,4 @@ services:
         ports:
           - "64978:80"  
 
-    frontend:
-        container_name: frontend
-        image: frontend
-        build: ./Marvel-API/
-        ports:
-          - '5555:80'
+    
